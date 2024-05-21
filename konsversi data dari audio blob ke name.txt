@@ -1,0 +1,14 @@
+const data = {
+    "id": 1,
+    "audio_name_input": {
+        "type": "Buffer",
+        "data": [78, 97, 109, 97, 46, 109, 112, 51]
+    },
+    // ...
+};
+
+// Mengambil nilai dari "audio_name_input"
+const bufferData = data.audio_name_input.data;
+const audioName = Buffer.from(bufferData).toString('utf8');
+
+console.log("Nama file audio:", audioName);
