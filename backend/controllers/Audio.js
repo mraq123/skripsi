@@ -1,5 +1,8 @@
 import Audio from "../models/AudioModel.js";
 import multer from "multer";
+import fs from "fs";
+import { Blob } from "buffer";
+import { authPlugins } from "mysql2";
 
 // upload file
 const storage = multer.diskStorage({
@@ -18,6 +21,7 @@ export const upload = multer({ storage: storage });
 export const getAudio = async (req, res) => {
   try {
     const response = await Audio.findAll();
+
     res.json(response);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -27,25 +31,50 @@ export const getAudio = async (req, res) => {
 export const getAudioById = async (req, res) => {
   try {
     const response = await Audio.findOne({ where: { id: req.params.id } });
-    res.json(response);
+    const audio = response.audio_name_input;
+    // res.setHeader("Content-Type", "audio/mpeg"); // Sesuaikan dengan tipe file audio Anda
+    // res.setHeader(
+    //   "Content-Disposition",
+    //   `inline; filename="audio_${req.params.id}.mp3"`
+    // );
+
+    // Kirim file audio sebagai buffer
+    res.send(Buffer.from(audio));
+    // res.json(response);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-export const createAudio = async (req, res) => {
-  const { keterangan_audio } = req.body;
-  const audio_name_input = req.file.filename; // Nama file dari multer
+// function fileToBlob(filePath) {
+//   return new Promise((resolve, reject) => {
+//     fs.readFile(filePath, (err, data) => {
+//       if (err) {
+//         return reject(err);
+//       }
+//       // Create a Blob from the file data
+//       const blob = new Blob([data]);
+//       resolve(blob);
+//     });
+//   });
+// }
 
-  try {
-    const response = await Audio.create({
-      audio_name_input: audio_name_input,
-      keterangan_audio: keterangan_audio,
-    });
-    res.status(200).json({ message: "Audio Berhasil Dibuat", data: response });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+const fileToBlob = async (filePath) => {
+  const data = await fs.readFile(filePath);
+  return new Blob([data]);
+};
+
+export const createAudio = async (req, res) => {
+  const filePath = req.file.path;
+  const { keterangan_audio } = req.body;
+  const audioBuffer = fs.readFileSync(filePath);
+
+  const response = await Audio.create({
+    audio_name_input: audioBuffer,
+    keterangan_audio: keterangan_audio,
+  });
+  fs.unlinkSync(filePath);
+  res.status(200).json({ message: "Audio Berhasil Dibuat", data: "oke" });
 };
 
 export const updateAudio = async (req, res) => {

@@ -19,6 +19,28 @@ export const getUserById = async (req, res) => {
   }
 };
 
+// export const createUser = async (req, res) => {
+//   const { name, email, password, username, role, confirmPassword } = req.body;
+//   if (password !== confirmPassword) {
+//     return res
+//       .status(400)
+//       .json({ message: "Password and Confirm Password Tidak Sama " });
+//   }
+//   const hashedPassword = await argon2.hash(password);
+//   try {
+//     const response = await User.create({
+//       name: name,
+//       email: email,
+//       password: hashedPassword,
+//       username: username,
+//       role: role,
+//     });
+//     res.status(200).json({ message: "User Berhasil Dibuat", data: response });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 export const createUser = async (req, res) => {
   const { name, email, password, username, role, confirmPassword } = req.body;
   if (password !== confirmPassword) {
@@ -26,17 +48,19 @@ export const createUser = async (req, res) => {
       .status(400)
       .json({ message: "Password and Confirm Password Tidak Sama " });
   }
-  const hashedPassword = await argon2.hash(password);
+
   try {
+    const hashedPassword = await argon2.hash(password);
     const response = await User.create({
-      name: name,
-      email: email,
+      name,
+      email,
       password: hashedPassword,
-      username: username,
-      role: role,
+      username,
+      role,
     });
     res.status(200).json({ message: "User Berhasil Dibuat", data: response });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };

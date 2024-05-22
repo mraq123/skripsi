@@ -23,6 +23,9 @@ const store = new sessionStore({
 //   console.log("Koneksi berhasil didirikan");
 // })();
 
+// // Serve static files from the 'upload' directory
+// app.use("/uploads", express.static("uploads"));
+
 app.use(
   session({
     secret: process.env.SESS_SECRET,
@@ -36,11 +39,11 @@ app.use(
   })
 );
 
+// app.use(cors());
 app.use(
   cors({
     credentials: true,
     origin: "http://localhost:5173",
-    // methods: ["GET", "POST", "DELETE", "PATCH"],
   })
 );
 
