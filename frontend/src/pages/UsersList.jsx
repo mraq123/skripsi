@@ -10,7 +10,7 @@ const UsersList = () => {
   const GetMe = async () => {
     try {
       const response = await axios.get("http://localhost:5000/me");
-      console.log(response.data);
+      // console.log(response.data);
       return response.data;
     } catch (error) {
       if (error.response) {

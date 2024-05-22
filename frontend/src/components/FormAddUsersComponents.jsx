@@ -1,23 +1,55 @@
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const FormAddUsersComponents = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPass] = useState("");
+  const [msg, setMsg] = useState("");
+  const [role, setRole] = useState("");
+  const navigate = useNavigate();
+  const SaveAddFormUser = async (e) => {
+    e.preventDefault();
+    try {
+      const userData = {
+        username,
+        email,
+        password,
+        confirmPassword,
+        role,
+      };
+      await axios.post("http://localhost:5000/users", userData);
+      alert("Berhasil Menambah User");
+      navigate("/users");
+    } catch (error) {
+      console.error(error);
+      if (error.response) {
+        setMsg(error.response.data.message);
+      }
+    }
+  };
   return (
     <>
       <div className="w-full h-auto flex flex-col ">
         <div className="w-full h-auto">
-          <div className="title">ADD USERS</div>
+          <div className="subtitle">ADD NEW USERS</div>
         </div>
 
         <div className="w-1/4 h-auto flex flex-col gap-2 mt-5">
-          <form>
+          <form onSubmit={SaveAddFormUser}>
+            {msg && <div className="text-red-500 mb-4">{msg}</div>}
             <div className="flex flex-col gap-2">
               <h2 className="font-bold">UserName</h2>
               <input
                 type="text"
-                name=""
-                id=""
+                name="username"
                 className="shadow-lg rounded h-8 border-current rounded-lg"
                 placeholder="Masukkan Username ..."
+                required
+                onChange={(e) => setUsername(e.target.value)}
+                value={username}
               />
             </div>
 
@@ -26,9 +58,11 @@ const FormAddUsersComponents = () => {
               <input
                 type="email"
                 name="email"
-                id=""
                 placeholder="Masukkan email ..."
                 className="shadow-lg rounded h-8 border-current	rounded-lg	"
+                required
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
               />
             </div>
 
@@ -36,10 +70,12 @@ const FormAddUsersComponents = () => {
               <h2 className="font-bold">Password</h2>
               <input
                 type="password"
-                name=""
-                id=""
+                name="password"
                 className="shadow-lg rounded h-8 border-current	rounded-lg"
                 placeholder="Masukkan Password ..."
+                required
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
               />
             </div>
 
@@ -47,16 +83,23 @@ const FormAddUsersComponents = () => {
               <h2 className="font-bold">Confirm Password</h2>
               <input
                 type="password"
-                name=""
-                id=""
+                name="confirmPass"
                 className="shadow-lg rounded h-8 border-current	rounded-lg"
                 placeholder="Ulangi Password ..."
+                required
+                onChange={(e) => setConfirmPass(e.target.value)}
+                value={confirmPassword}
               />
             </div>
 
             <div className="flex flex-col gap-2 mt-3">
               <h2 className="font-bold">Role</h2>
-              <select className="shadow-lg rounded h-8 border-current	rounded-lg">
+              <select
+                className="shadow-lg rounded h-8 border-current	rounded-lg "
+                style={{ backgroundColor: "white" }}
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+              >
                 <option value="admin">Admin</option>
                 <option value="user">User</option>
               </select>
@@ -70,7 +113,10 @@ const FormAddUsersComponents = () => {
                 Save
               </button>
               <Link to={"/users"}>
-                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 rounded">
+                <button
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 rounded"
+                  type="submit"
+                >
                   Cancel
                 </button>
               </Link>

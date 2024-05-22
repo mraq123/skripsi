@@ -1,6 +1,38 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 export const AudioComponents = () => {
+  const [getAudio, setAudio] = useState([]);
+  // const [audioUrl, setAudioUrl] = useState("");
+
+  // const getAllDataudio = async () => {
+  //   try {
+  //     const response = await axios.get("http://localhost:5000/audio");
+  //     setAudio(response.data);
+  //     const audioData = response.data.audio;
+  //     const audioBlob = new Blob([audioData], { type: "audio/mp3" });
+  //     setAudioUrl(URL.createObjectURL(audioBlob));
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching audio:", error);
+  //   }
+  // };
+
+  const getAllDataudio = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/audio"); // Ganti URL sesuai dengan endpoint backend Anda
+      setAudio(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching audio:", error);
+    }
+  };
+
+  useEffect(() => {
+    getAllDataudio();
+  }, []);
+
   return (
     <div className="w-full h-auto flex flex-col gap-10">
       <div className="">
@@ -10,7 +42,7 @@ export const AudioComponents = () => {
       <div className="w-full h-auto flex flex-col gap-5">
         <Link to={"/addaudio"}>
           <button className="mr-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded">
-            Add
+            Add New
           </button>
         </Link>
         <table className="w-full bg-white border border-gray-200 rounded-lg shadow-lg">
@@ -23,20 +55,34 @@ export const AudioComponents = () => {
             </tr>
           </thead>
           <tbody className="text-gray-600 ">
-            <tr className="border-b border-gray-200 hover:bg-gray-50">
-              <td className="py-3 px-6 text-left">1</td>
-              <td className="py-3 px-6 text-left">MasukSekolah.mp3</td>
-              <td className="py-3 px-6 text-left">Audio Masuk Sekolah</td>
-
-              <td className="flex gap-2 mt-2">
-                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-4 rounded">
-                  Edit
-                </button>
-                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 rounded">
-                  Delete
-                </button>
-              </td>
-            </tr>
+            {getAudio.map((audio, index) => (
+              <tr
+                key={audio.id}
+                className="border-b border-gray-200 hover:bg-gray-50"
+              >
+                <td className="py-3 px-6 text-left">{index + 1}</td>
+                <td className="py-3 px-6 text-left">
+                  <audio controls>
+                    <source
+                      src={`http://localhost:5000/uploads/${audio.audio_name_input}`}
+                      type="audio/mp3"
+                    />{" "}
+                    {/* Ganti URL sesuai dengan lokasi file audio */}
+                  </audio>
+                </td>
+                <td className="py-3 px-6 text-left">
+                  {audio.keterangan_audio}
+                </td>
+                <td className="flex gap-2 mt-2">
+                  <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-4 rounded">
+                    Edit
+                  </button>
+                  <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 rounded">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
