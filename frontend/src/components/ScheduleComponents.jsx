@@ -1,43 +1,162 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ScheduleComponents = () => {
+  const [error, setError] = useState(null);
+  const [schedule, setSchedule] = useState("");
+  const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/me");
+        setUserData(response.data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    // Navigate if user's role is user
+    if (userData && userData.user.role === "user") {
+      navigate("/dashboard");
+    }
+  }, [userData, navigate]);
+
+  const scheduleList = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/schedule");
+      setSchedule(response.data);
+      // console.log(response.data);
+    } catch (error) {
+      console.log(error.data);
+    }
+  };
+
+  const GetMe = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/me");
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.message);
+      } else if (error.request) {
+        setError("No response from server");
+      } else {
+        setError("An error occurred during login");
+      }
+    }
+  };
+
+  useEffect(() => {
+    scheduleList();
+  }, []);
+
+  useEffect(() => {
+    GetMe();
+  }, []);
+
+  useEffect(() => {
+    if (error) {
+      navigate("/");
+    }
+  });
+
+  const convertBufferToAudio = (buffer) => {
+    // Konversi buffer ke Uint8Array
+    const byteArray = new Uint8Array(buffer.data);
+    // console.log(byteArray);
+    // Buat Blob dari Uint8Array
+    const blob = new Blob([byteArray], { type: "audio/mpeg" });
+
+    // Buat URL dari Blob
+    return URL.createObjectURL(blob);
+  };
+
+  const handleDelete = async (id) => {
+    const isConfirmed = window.confirm("Apakah kamu ingin menghapus Schedule?");
+    if (isConfirmed) {
+      try {
+        await axios.delete(`http://localhost:5000/schedule/${id}`);
+
+        setSchedule(schedule.filter((sc) => sc.id !== id));
+      } catch (error) {
+        console.log(error);
+        setError("Terjadi kesalahan saat menghapus jadwal");
+      }
+    }
+  };
+
   return (
-    <div className="w-full h-auto flex flex-col gap-10">
+    <div className=" w-full h-auto">
       <div className="">
         <h1 className="title">Schedule</h1>
         <h2 className="subtitle">List Of Schedule</h2>
       </div>
       <div className="w-full h-auto flex flex-col gap-5">
         <Link to={"/addschedule"}>
-          <button className="mr-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded">
-            Add
+          <button className="mr-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded mt-5">
+            Add New
           </button>
         </Link>
-        <table className="w-full bg-white border border-gray-200 rounded-lg shadow-lg">
+        {error && <div className="text-red-500 mt-2">Error: {error}</div>}
+        <table
+          className=" bg-white border border-gray-200 rounded-lg shadow-lg"
+          style={{ width: "auto", padding: "10px" }}
+        >
           <thead>
             <tr className="bg-gray-100 text-left text-gray-600 uppercase text-sm leading-normal">
               <th className="py-3 px-6">No</th>
               <th className="py-3 px-6">Jam</th>
               <th className="py-3 px-6">Keterangan Schedule</th>
               <th className="py-3 px-6">Audio Name</th>
+              <th className="py-3 px-6">Keterangan Audio Name</th>
               <th className="py-3 px-6">Action</th>
             </tr>
           </thead>
           <tbody className="text-gray-600 ">
-            <tr className="border-b border-gray-200 hover:bg-gray-50">
-              <td className="py-3 px-6 text-left">1</td>
-              <td className="py-3 px-6 text-left">08.00</td>
-              <td className="py-3 px-6 text-left">jam masuk sekolah</td>
-              <td className="py-3 px-6 text-left">MasukSekolah.mp3</td>
-              <td className="flex gap-2 mt-2">
-                <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-4 rounded">
-                  Edit
-                </button>
-                <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 rounded">
-                  Delete
-                </button>
-              </td>
-            </tr>
+            {schedule &&
+              schedule.map((sc, i) => {
+                return (
+                  <tr
+                    className="border-b border-gray-200 hover:bg-gray-50  "
+                    key={sc.id}
+                  >
+                    <td className="pl-12 py-2">{i + 1}</td>
+                    <td className="pl-10 py-2">{sc.jam}</td>
+                    <td className="pl-12 py-2">{sc.keterangan_schedule}</td>
+                    <td className="pl-10 py-3">
+                      <audio controls>
+                        <source
+                          src={convertBufferToAudio(sc.audio.audio_name_input)}
+                          type="audio/mp3"
+                        />
+                        Your browser does not support the audio element.
+                      </audio>
+                    </td>
+                    <td className="pl-12 py-2">{sc.audio.keterangan_audio}</td>
+                    <td className="flex gap-2 mt-2 pr-2">
+                      <Link to={`/editschedule/${sc.id}`}>
+                        <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-4 rounded">
+                          Edit
+                        </button>
+                      </Link>
+                      <button
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4 rounded"
+                        onClick={() => handleDelete(sc.id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>
