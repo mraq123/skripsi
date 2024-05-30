@@ -92,7 +92,6 @@ const FormEditUsersComponents = () => {
                 name="password"
                 className="shadow-lg rounded h-8 border-current	rounded-lg"
                 placeholder="Masukkan Password ..."
-                required
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
               />
@@ -105,7 +104,6 @@ const FormEditUsersComponents = () => {
                 name="confirmPass"
                 className="shadow-lg rounded h-8 border-current	rounded-lg"
                 placeholder="Ulangi Password ..."
-                required
                 onChange={(e) => setConfirmPass(e.target.value)}
                 value={confirmPassword}
               />

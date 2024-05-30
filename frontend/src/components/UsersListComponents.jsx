@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FaUser } from "react-icons/fa";
 
 const UsersListComponents = () => {
   const [getUsers, setGetUsers] = useState();
@@ -83,9 +84,16 @@ const UsersListComponents = () => {
   });
   return (
     <div className="w-full h-auto flex flex-col ">
-      <div className="">
-        <h1 className="title">Users</h1>
-        <h2 className="subtitle">List Of Users</h2>
+      <div className="flex gap-2">
+        <div className="flex justify-center items-center">
+          <FaUser style={{ fontSize: "30px" }} />
+        </div>
+
+        <div className="flex justify-center items-center">
+          <h1 className="font-bold" style={{ fontSize: "25px" }}>
+            Users
+          </h1>
+        </div>
       </div>
       <div className="w-full h-auto flex flex-col gap-5">
         <Link to={"/addusers"}>

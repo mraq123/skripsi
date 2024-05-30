@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { BsMegaphoneFill } from "react-icons/bs";
 
 export const AudioComponents = () => {
   const [getAudio, setAudio] = useState([]);
@@ -93,9 +94,16 @@ export const AudioComponents = () => {
 
   return (
     <div className=" w-full h-auto">
-      <div className="">
-        <h1 className="title">Audio</h1>
-        <h2 className="subtitle">List Of Audio</h2>
+      <div className="flex gap-2">
+        <div className="flex justify-center items-center">
+          <BsMegaphoneFill style={{ fontSize: "30px" }} />
+        </div>
+
+        <div className="flex justify-center items-center">
+          <h1 className="font-bold" style={{ fontSize: "25px" }}>
+            Audio
+          </h1>
+        </div>
       </div>
       <div className=" h-auto flex flex-col gap-5">
         <Link to={"/addaudio"}>

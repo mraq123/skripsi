@@ -25,6 +25,7 @@ const FormAddAudioComponents = () => {
         }
       );
       console.log(response.data);
+      alert("Berhasil tambah audio");
       navigate("/audio");
     } catch (error) {
       console.error(error);
@@ -47,6 +48,7 @@ const FormAddAudioComponents = () => {
               name="file"
               onChange={(e) => setAudioFile(e.target.files[0])}
               className="shadow-lg h-8 border-current"
+              required
             />
           </div>
 
@@ -59,6 +61,7 @@ const FormAddAudioComponents = () => {
               onChange={(e) => setKeteranganAudio(e.target.value)}
               className="shadow-lg rounded h-8 border-current rounded-lg"
               placeholder="Masukkan Keterangan ..."
+              required
             />
           </div>
 

@@ -34,7 +34,7 @@ const FormAddUsersComponents = () => {
     <>
       <div className="w-full h-auto flex flex-col ">
         <div className="w-full h-auto">
-          <div className="subtitle">ADD NEW USERS</div>
+          <div className="title">ADD NEW USERS</div>
         </div>
 
         <div className="w-1/4 h-auto flex flex-col gap-2 mt-5">
@@ -100,8 +100,9 @@ const FormAddUsersComponents = () => {
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
               >
-                <option value="admin">Admin</option>
-                <option value="user">User</option>
+                <option value=""></option>
+                <option value="user">user</option>
+                <option value="admin">admin</option>
               </select>
             </div>
 

@@ -10,6 +10,8 @@ import {
 } from "react-icons/io5";
 import axios from "axios";
 import { useEffect, useState } from "react";
+// import { FaUser } from "react-icons/fa";
+import { IoPerson } from "react-icons/io5";
 
 const Sidebar = () => {
   const [userRole, setUserRole] = useState(null);
@@ -80,6 +82,16 @@ const Sidebar = () => {
               style={{ display: "flex", gap: "10px", marginBottom: "5px" }}
             >
               <IoPlaySharp /> Play Time
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to={"/profile"}
+              className="menu-item"
+              style={{ display: "flex", gap: "10px", marginBottom: "5px" }}
+            >
+              <IoPerson /> Profile
             </NavLink>
           </li>
         </ul>

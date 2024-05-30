@@ -13,6 +13,7 @@ import AddAudio from "./pages/AddAudio";
 import EditAudio from "./pages/EditAudio";
 import AddSchedule from "./pages/AddSchedule";
 import EditSchedule from "./pages/EditSchedule";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -41,6 +42,10 @@ function App() {
             {/* SCHEDULE */}
             <Route element={<AddSchedule />} path="/addschedule" />
             <Route element={<EditSchedule />} path="/editschedule/:id" />
+            {/*  */}
+
+            {/* Profile */}
+            <Route element={<Profile />} path="/profile" />
             {/*  */}
           </Routes>
         </BrowserRouter>

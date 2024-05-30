@@ -40,3 +40,37 @@ export const Logout = async (req, res) => {
     return res.status(200).json({ message: " Berhasil Logout" });
   });
 };
+
+export const updateUserProfile = async (req, res) => {
+  if (!req.session.userId) {
+    return res.status(401).json({ message: "Mohon Login ke Akun Anda" });
+  }
+
+  const { username, email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ where: { id: req.session.userId } });
+    if (!user) {
+      return res.status(404).json({ message: "User Tidak Ditemukan" });
+    }
+
+    user.username = username || user.username;
+    user.email = email || user.email;
+
+    if (password) {
+      const hashedPassword = await argon2.hash(password);
+      user.password = hashedPassword;
+    }
+
+    await user.save();
+
+    res.status(200).json({ message: "Profil berhasil diperbarui", user });
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        message: "Terjadi kesalahan saat memperbarui profil",
+        error: error.message,
+      });
+  }
+};

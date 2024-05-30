@@ -65,43 +65,80 @@ export const createUser = async (req, res) => {
   }
 };
 
-export const updateUser = async (req, res) => {
-  {
-    const user = await User.findOne({ where: { id: req.params.id } });
-    if (!user) {
-      return res.status(404).json({ message: "User Tidak Ditemukan" });
-    }
-    const { name, email, password, username, role, confirmPassword } = req.body;
-    let hashedPassword = user.password;
-    if (password === "" || password === null) {
-      hashedPassword = user.password;
-    } else {
-      hashedPassword = await argon2.hash(password);
-    }
+// export const updateUser = async (req, res) => {
+//   {
+//     const user = await User.findOne({ where: { id: req.params.id } });
+//     if (!user) {
+//       return res.status(404).json({ message: "User Tidak Ditemukan" });
+//     }
+//     const { name, email, password, username, role, confirmPassword } = req.body;
+//     let hashedPassword = user.password;
+//     if (password === "" || password === null) {
+//       hashedPassword = user.password;
+//     } else {
+//       hashedPassword = await argon2.hash(password);
+//     }
 
+//     if (password !== confirmPassword) {
+//       return res
+//         .status(400)
+//         .json({ message: "Password and Confirm Password Tidak Sama " });
+//     }
+
+//     try {
+//       const response = await User.update(
+//         {
+//           name: name,
+//           email: email,
+//           password: hashedPassword,
+//           username: username,
+//           role: role,
+//         },
+//         { where: { id: user.id } }
+//       );
+//       res
+//         .status(200)
+//         .json({ message: "User Berhasil Di Update", data: response });
+//     } catch (error) {
+//       res.status(500).json({ message: error.message });
+//     }
+//   }
+// };
+
+export const updateUser = async (req, res) => {
+  const user = await User.findOne({ where: { id: req.params.id } });
+  if (!user) {
+    return res.status(404).json({ message: "User Tidak Ditemukan" });
+  }
+
+  const { name, email, password, username, role, confirmPassword } = req.body;
+  let hashedPassword = user.password;
+
+  if (password && password !== "") {
     if (password !== confirmPassword) {
       return res
         .status(400)
-        .json({ message: "Password and Confirm Password Tidak Sama " });
+        .json({ message: "Password dan Confirm Password Tidak Sama " });
     }
+    hashedPassword = await argon2.hash(password);
+  }
 
-    try {
-      const response = await User.update(
-        {
-          name: name,
-          email: email,
-          password: hashedPassword,
-          username: username,
-          role: role,
-        },
-        { where: { id: user.id } }
-      );
-      res
-        .status(200)
-        .json({ message: "User Berhasil Di Update", data: response });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
+  try {
+    const response = await User.update(
+      {
+        name: name,
+        email: email,
+        password: hashedPassword,
+        username: username,
+        role: role,
+      },
+      { where: { id: user.id } }
+    );
+    res
+      .status(200)
+      .json({ message: "User Berhasil Di Update", data: response });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 

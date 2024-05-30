@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { AiOutlineSchedule } from "react-icons/ai";
 
 const ScheduleComponents = () => {
   const [error, setError] = useState(null);
@@ -95,9 +96,16 @@ const ScheduleComponents = () => {
 
   return (
     <div className=" w-full h-auto">
-      <div className="">
-        <h1 className="title">Schedule</h1>
-        <h2 className="subtitle">List Of Schedule</h2>
+      <div className="flex gap-2">
+        <div className="flex justify-center items-center">
+          <AiOutlineSchedule style={{ fontSize: "30px" }} />
+        </div>
+
+        <div className="flex justify-center items-center">
+          <h1 className="font-bold" style={{ fontSize: "25px" }}>
+            Schedule
+          </h1>
+        </div>
       </div>
       <div className="w-full h-auto flex flex-col gap-5">
         <Link to={"/addschedule"}>
