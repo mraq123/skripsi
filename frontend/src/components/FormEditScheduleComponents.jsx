@@ -55,6 +55,7 @@ function FormEditScheduleComponents() {
       await axios.patch(`http://localhost:5000/schedule/${id}`, scheduleData);
       alert("Berhasil Edit Schedule");
       navigate("/schedule");
+      window.location.reload();
     } catch (error) {
       console.error(error.response?.data);
       setError(error.response?.data.message || "Terjadi kesalahan");

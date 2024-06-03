@@ -5,8 +5,6 @@ import { RxDashboard } from "react-icons/rx";
 import { IoAccessibility } from "react-icons/io5";
 import { IoMegaphoneOutline } from "react-icons/io5";
 import Lottie from "lottie-react";
-// import { MdOutlineVideoLibrary } from "react-icons/md";
-// import { BsPlayCircle } from "react-icons/bs";
 import { FaCalendarDays } from "react-icons/fa6";
 import Amegaphone from "../assets/animation.json";
 import AText from "../assets/chart.json";
@@ -21,7 +19,6 @@ const Welcome = () => {
       try {
         const response = await axios.get("http://localhost:5000/me");
         setData(response.data);
-        // console.log(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

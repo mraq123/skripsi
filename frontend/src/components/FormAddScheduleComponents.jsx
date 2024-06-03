@@ -39,6 +39,7 @@ function FormAddScheduleComponents() {
       // Arahkan ke halaman daftar jadwal setelah berhasil membuat jadwal
       alert("Berhasil Menambah Schedule");
       navigate("/schedule");
+      window.location.reload();
     } catch (error) {
       console.error(error.response?.data);
       setError(error.response?.data.message || "Terjadi kesalahan");

@@ -63,7 +63,7 @@ const LibraryComponents = () => {
 
       <table
         className="bg-white border border-gray-200 rounded-lg shadow-lg"
-        style={{ width: "100%", padding: "10px" }}
+        style={{ width: "99%" }}
       >
         <thead>
           <tr className="bg-gray-100 text-left text-gray-600 uppercase text-sm leading-normal">
@@ -81,7 +81,7 @@ const LibraryComponents = () => {
                 className="border-b border-gray-200 hover:bg-gray-50"
                 key={sc.id}
               >
-                <td className="pl-12 py-5">{i + 1}</td>
+                <td className="pl-12 py-10">{i + 1}</td>
                 <td className="pl-10 py-3">
                   <audio controls ref={(el) => (audioRefs.current[i] = el)}>
                     <source
@@ -90,10 +90,19 @@ const LibraryComponents = () => {
                     />
                     Your browser does not support the audio element.
                   </audio>
+                  <div className="mt-2">
+                    <a
+                      href={convertBufferToAudio(sc.audio_name_input)}
+                      download={`${sc.audio_name_input}.mp3`}
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded inline-block mt-2"
+                    >
+                      Download
+                    </a>
+                  </div>
                 </td>
-                <td className="pl-12 py-5 ">{sc.keterangan_audio}</td>
+                <td className="pl-12 py-10 ">{sc.keterangan_audio}</td>
 
-                <td className="pl-12 py-5">
+                <td className="pl-12 py-10">
                   <button
                     onClick={() => playAudio(i)}
                     className="mr-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"

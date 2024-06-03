@@ -3,14 +3,21 @@ import axios from "axios";
 import { FaRegPlayCircle } from "react-icons/fa";
 
 const PlayTimeComponents = () => {
-  const [getPlayTime, setGetPlayTime] = useState([]);
+  const [getPlayTime, setGetPlayTime] = useState(() => {
+    // Mengambil data dari local storage saat komponen dimuat
+    const storedData = localStorage.getItem("playTimeData");
+    return storedData ? JSON.parse(storedData) : [];
+  });
   const audioRefs = useRef([]);
 
   // Fungsi untuk mendapatkan jadwal dari API
   const getApiSchedule = async () => {
     try {
       const response = await axios.get("http://localhost:5000/schedule");
-      setGetPlayTime(response.data);
+      const data = response.data;
+      setGetPlayTime(data);
+      // Menyimpan data ke local storage
+      localStorage.setItem("playTimeData", JSON.stringify(data));
     } catch (error) {
       console.log(error.data);
     }
@@ -22,25 +29,25 @@ const PlayTimeComponents = () => {
   }, []);
 
   // Memeriksa dan memainkan audio sesuai jadwal setiap menit
-  useEffect(() => {
-    const interval = setInterval(() => {
-      checkAndPlayAudio();
-    }, 50000); // Memeriksa setiap menit
-    return () => clearInterval(interval);
-  }, [getPlayTime]);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     checkAndPlayAudio();
+  //   }, 50000); // Memeriksa setiap menit
+  //   return () => clearInterval(interval);
+  // }, [getPlayTime]);
 
-  // Fungsi untuk memeriksa dan memainkan audio jika waktunya sesuai dengan jadwal
-  const checkAndPlayAudio = () => {
-    const currentTime = new Date();
-    const currentHour = currentTime.getHours();
-    const currentMinute = currentTime.getMinutes();
-    getPlayTime.forEach((sc, index) => {
-      const [scheduleHour, scheduleMinute] = sc.jam.split(":").map(Number);
-      if (scheduleHour === currentHour && scheduleMinute === currentMinute) {
-        playAudio(index);
-      }
-    });
-  };
+  // // Fungsi untuk memeriksa dan memainkan audio jika waktunya sesuai dengan jadwal
+  // const checkAndPlayAudio = () => {
+  //   const currentTime = new Date();
+  //   const currentHour = currentTime.getHours();
+  //   const currentMinute = currentTime.getMinutes();
+  //   getPlayTime.forEach((sc, index) => {
+  //     const [scheduleHour, scheduleMinute] = sc.jam.split(":").map(Number);
+  //     if (scheduleHour === currentHour && scheduleMinute === currentMinute) {
+  //       playAudio(index);
+  //     }
+  //   });
+  // };
 
   // Fungsi untuk mengkonversi buffer menjadi URL audio
   const convertBufferToAudio = (buffer) => {
@@ -91,7 +98,7 @@ const PlayTimeComponents = () => {
 
       <table
         className="bg-white border border-gray-200 rounded-lg shadow-lg"
-        style={{ width: "100%", padding: "10px" }}
+        style={{ width: "99%" }}
       >
         <thead>
           <tr className="bg-gray-100 text-left text-gray-600 uppercase text-sm leading-normal">
@@ -108,9 +115,9 @@ const PlayTimeComponents = () => {
               className="border-b border-gray-200 hover:bg-gray-50"
               key={sc.id}
             >
-              <td className="pl-12 py-5">{i + 1}</td>
-              <td className="pl-10 py-5">{sc.jam}</td>
-              <td className="pl-12 py-5">{sc.keterangan_schedule}</td>
+              <td className="pl-12 py-10">{i + 1}</td>
+              <td className="pl-10 py-10">{sc.jam}</td>
+              <td className="pl-12 py-10">{sc.keterangan_schedule}</td>
               <td className="pl-10 py-3">
                 <audio controls ref={(el) => (audioRefs.current[i] = el)}>
                   <source
@@ -119,8 +126,17 @@ const PlayTimeComponents = () => {
                   />
                   Your browser does not support the audio element.
                 </audio>
+                <div className="mt-2">
+                  <a
+                    href={convertBufferToAudio(sc.audio.audio_name_input)}
+                    download={`${sc.audio.audio_name_input}.mp3`}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded inline-block mt-2"
+                  >
+                    Download
+                  </a>
+                </div>
               </td>
-              <td className="pl-12 py-5">
+              <td className="pl-12 py-10 flex  pr-5">
                 <button
                   onClick={() => playAudio(i)}
                   className="mr-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"

@@ -35,7 +35,7 @@ const Login = () => {
 
   return (
     <div
-      className="w-screen h-screen items-center justify-center flex"
+      className="w-screen h-screen items-center justify-center flex  resL"
       style={{ fontFamily: "Plus Jakarta Sans" }}
     >
       <div className="w-3/5 h-4/5 shadow-xl flex rounded-xl">
@@ -58,7 +58,7 @@ const Login = () => {
               marginBottom: "20px",
             }}
           />
-          <div>
+          <div className="mt-7">
             <h2 className="font-bold text-white">
               LOGIN SMART AUDIO ANNOUNCER <br /> MAKING BIG THINGS AND TO EASIER{" "}
               <br /> AND MORE FUN{" "}
@@ -129,5 +129,7 @@ const Login = () => {
     </div>
   );
 };
+
+<style>@media</style>;
 
 export default Login;

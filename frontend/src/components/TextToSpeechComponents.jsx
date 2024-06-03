@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { RiSpeakFill } from "react-icons/ri";
-
 import { BsChatText } from "react-icons/bs";
 
 export const TextToSpeechComponents = () => {
   const [text, setText] = useState("");
   const [audioContent, setAudioContent] = useState(null);
   const [error, setError] = useState(null);
+  const [voiceType, setVoiceType] = useState("A");
   const audioRef = useRef(null);
 
   // State untuk Speech-to-Text
@@ -19,11 +19,15 @@ export const TextToSpeechComponents = () => {
     setText(e.target.value);
   };
 
+  const handleVoiceTypeChange = (e) => {
+    setVoiceType(e.target.value);
+  };
+
   const handleTextToSpeech = async () => {
     const url = "http://localhost:5000/api/text-to-speech";
 
     try {
-      const response = await axios.post(url, { text });
+      const response = await axios.post(url, { text, voiceType });
       setAudioContent(response.data.audioContent);
       setError(null);
     } catch (error) {
@@ -125,6 +129,33 @@ export const TextToSpeechComponents = () => {
           onChange={handleTextChange}
           placeholder="Silahkan Isi Text Pengumuman..."
         />
+
+        <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
+          <div className="">
+            <label>
+              <input
+                type="radio"
+                value="A"
+                checked={voiceType === "A"}
+                onChange={handleVoiceTypeChange}
+              />
+              Female
+            </label>
+          </div>
+
+          <div className="">
+            <label>
+              <input
+                type="radio"
+                value="B"
+                checked={voiceType === "B"}
+                onChange={handleVoiceTypeChange}
+              />
+              Male
+            </label>
+          </div>
+        </div>
+
         <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
           <button
             className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"

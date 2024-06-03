@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import session from "express-session";
-import dotenv from "dotenv";
 import UserRoute from "./routes/UserRoute.js";
 import AudioRoute from "./routes/AudioRoute.js";
 import ScheduleRoute from "./routes/ScheduleRoute.js";
@@ -10,26 +9,22 @@ import AuthRoute from "./routes/AuthRoute.js";
 import SequelizeStore from "connect-session-sequelize";
 import TtsRoute from "./routes/TtsRoute.js";
 
-dotenv.config();
+// Hapus dotenv.config() karena kita tidak menggunakan .env lagi
 
 const app = express();
+
+// Pindahkan nilai variabel env ke dalam kode
+const APP_PORT = 5000;
+const SESS_SECRET = "ksjdksjssk1k2j1kjlid28ldj2kjd2dklsjklie3";
 
 const sessionStore = SequelizeStore(session.Store);
 const store = new sessionStore({
   db: db,
 });
 
-// (async () => {
-//   await db.sync();
-//   console.log("Koneksi berhasil didirikan");
-// })();
-
-// // Serve static files from the 'upload' directory
-// app.use("/uploads", express.static("uploads"));
-
 app.use(
   session({
-    secret: process.env.SESS_SECRET,
+    secret: SESS_SECRET,
     resave: false,
     saveUninitialized: true,
     store: store,
@@ -40,7 +35,6 @@ app.use(
   })
 );
 
-// app.use(cors());
 app.use(
   cors({
     credentials: true,
@@ -58,6 +52,6 @@ app.use(TtsRoute);
 
 // store.sync();
 
-app.listen(process.env.APP_PORT, () => {
-  console.log("Server is running ");
+app.listen(APP_PORT, () => {
+  console.log(`Server is running on port ${APP_PORT}`);
 });

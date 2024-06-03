@@ -87,6 +87,8 @@ const ScheduleComponents = () => {
         await axios.delete(`http://localhost:5000/schedule/${id}`);
 
         setSchedule(schedule.filter((sc) => sc.id !== id));
+
+        window.location.reload();
       } catch (error) {
         console.log(error);
         setError("Terjadi kesalahan saat menghapus jadwal");
@@ -108,15 +110,18 @@ const ScheduleComponents = () => {
         </div>
       </div>
       <div className="w-full h-auto flex flex-col gap-5">
-        <Link to={"/addschedule"}>
-          <button className="mr-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded mt-5">
-            Add New
-          </button>
-        </Link>
+        <div>
+          <Link to={"/addschedule"}>
+            <button className="mr-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded mt-5">
+              Add New
+            </button>
+          </Link>
+        </div>
+
         {error && <div className="text-red-500 mt-2">Error: {error}</div>}
         <table
           className=" bg-white border border-gray-200 rounded-lg shadow-lg"
-          style={{ width: "auto", padding: "10px" }}
+          style={{ width: "99%" }}
         >
           <thead>
             <tr className="bg-gray-100 text-left text-gray-600 uppercase text-sm leading-normal">
@@ -136,10 +141,10 @@ const ScheduleComponents = () => {
                     className="border-b border-gray-200 hover:bg-gray-50  "
                     key={sc.id}
                   >
-                    <td className="pl-12 py-2">{i + 1}</td>
-                    <td className="pl-10 py-2">{sc.jam}</td>
-                    <td className="pl-12 py-2">{sc.keterangan_schedule}</td>
-                    <td className="pl-10 py-3">
+                    <td className="pl-12 py-10">{i + 1}</td>
+                    <td className="pl-10 py-10">{sc.jam}</td>
+                    <td className="pl-12 py-10">{sc.keterangan_schedule}</td>
+                    <td className="pl-10 py-3 items-center ">
                       <audio controls>
                         <source
                           src={convertBufferToAudio(sc.audio.audio_name_input)}
@@ -147,9 +152,18 @@ const ScheduleComponents = () => {
                         />
                         Your browser does not support the audio element.
                       </audio>
+                      <div className="mt-3">
+                        <a
+                          href={convertBufferToAudio(sc.audio.audio_name_input)}
+                          download={`${sc.audio.audio_name_input}.mp3`}
+                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded"
+                        >
+                          Download
+                        </a>
+                      </div>
                     </td>
-                    <td className="pl-12 py-2">{sc.audio.keterangan_audio}</td>
-                    <td className="flex gap-2 mt-2 pr-2">
+                    <td className="pl-10 py-10">{sc.audio.keterangan_audio}</td>
+                    <td className="flex gap-2 py-10 pr-2">
                       <Link to={`/editschedule/${sc.id}`}>
                         <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-4 rounded">
                           Edit

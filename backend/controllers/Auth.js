@@ -66,11 +66,9 @@ export const updateUserProfile = async (req, res) => {
 
     res.status(200).json({ message: "Profil berhasil diperbarui", user });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "Terjadi kesalahan saat memperbarui profil",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Terjadi kesalahan saat memperbarui profil",
+      error: error.message,
+    });
   }
 };

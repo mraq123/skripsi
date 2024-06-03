@@ -13,7 +13,7 @@ export const AudioComponents = () => {
     try {
       const response = await axios.get("http://localhost:5000/audio"); // Ganti URL sesuai dengan endpoint backend Anda
       setAudio(response.data);
-      // console.log(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error("Error fetching audio:", error);
     }
@@ -106,14 +106,17 @@ export const AudioComponents = () => {
         </div>
       </div>
       <div className=" h-auto flex flex-col gap-5">
-        <Link to={"/addaudio"}>
-          <button className="mr-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded mt-5">
-            Add New
-          </button>
-        </Link>
+        <div className="">
+          <Link to={"/addaudio"}>
+            <button className="mr-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded mt-5">
+              Add New
+            </button>
+          </Link>
+        </div>
+
         <table
           className=" bg-white border border-gray-200 rounded-lg shadow-lg"
-          style={{ width: "100%", padding: "10px", height: "auto" }}
+          style={{ width: "99%" }}
         >
           <thead>
             <tr className="bg-gray-100 text-left text-gray-600 uppercase text-sm leading-normal">
@@ -129,8 +132,8 @@ export const AudioComponents = () => {
                 key={audio.id}
                 className="border-b border-gray-200 hover:bg-gray-50"
               >
-                <td className="pl-12 py-2 ">{index + 1}</td>
-                <td className=" pl-12 py-3">
+                <td className="pl-12 py-10 ">{index + 1}</td>
+                <td className=" pl-12 py-3 items-center">
                   <audio controls>
                     <source
                       src={convertBufferToAudio(audio.audio_name_input)}
@@ -138,9 +141,18 @@ export const AudioComponents = () => {
                     />
                     Your browser does not support the audio element.
                   </audio>
+                  <div className="mt-2">
+                    <a
+                      href={convertBufferToAudio(audio.audio_name_input)}
+                      download={`${audio.audio_name_input}.mp3`}
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-1 rounded"
+                    >
+                      Download
+                    </a>
+                  </div>
                 </td>
-                <td className="pl-12 py-2 ">{audio.keterangan_audio}</td>
-                <td className="flex gap-2 mt-3 pr-3">
+                <td className="pl-12 py-10 ">{audio.keterangan_audio}</td>
+                <td className="flex gap-2 absolute mt-10">
                   <Link to={`/editaudio/${audio.id}`}>
                     <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-4 rounded">
                       Edit
