@@ -9,7 +9,6 @@ const Navbar = () => {
     try {
       const response = await axios.get("http://localhost:5000/me");
       setUser(response.data);
-      // console.log("NAVBAR", response.data);
       return response.data;
     } catch (error) {
       console.log(error.message);
